@@ -11,8 +11,6 @@ source:
 
 build:
   number: 0
-  # Armadillo doesn't support MKL on macOS
-  skip: true  # [osx and (blas_impl != 'openblas')]
 
 requirements:
   build:
@@ -28,16 +26,12 @@ requirements:
     - llvm-openmp  # [osx]
     - libgomp      # [linux]
     - armadillo >=9.800.0
-    - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
-    - mkl-devel {{ mkl }}  # [blas_impl == 'mkl']
   run:
     # Pins through run_exports of packages in host.
     - intel-openmp  # [win]
     - llvm-openmp  # [osx]
     - libgomp      # [linux]
     - armadillo
-    - openblas-devel # [blas_impl == 'openblas' and not win]
-    - mkl-devel  # [blas_impl == 'mkl']
 
 test:
   commands:
