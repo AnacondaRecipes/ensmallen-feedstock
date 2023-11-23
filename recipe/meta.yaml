@@ -19,18 +19,19 @@ requirements:
     - cmake
     - make  # [not win]
     - ninja  # [win]
+    # In build so that their strong run_exports take effect.
+    # ensmallen is a C++ header only library. We don't technically need these in build, but they
+    # allow to inject run_exports.
+    - libgomp # [linux and blas_impl != "mkl"]
+    - llvm-openmp # [osx and blas_impl != "mkl"]
   host:
-    # ensmallen is a C++ header only library. We don't technically need these in hosts, but they
-    # allow ot inject run_exports.
-    - intel-openmp  # [win]
-    - llvm-openmp  # [osx]
-    - libgomp      # [linux]
+    # Added here to get its run_exports in run.
     - armadillo >=9.800.0
   run:
+    - intel-openmp {{ mkl }}  # [blas_impl == "mkl"]
     # Pins through run_exports of packages in host.
-    - intel-openmp  # [win]
-    - llvm-openmp  # [osx]
-    - libgomp      # [linux]
+    - llvm-openmp  # [osx and blas_impl != "mkl"]
+    - libgomp      # [linux and blas_impl != "mkl"]
     - armadillo
 
 test:
