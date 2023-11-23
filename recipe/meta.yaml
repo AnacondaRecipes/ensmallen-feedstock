@@ -11,21 +11,33 @@ source:
 
 build:
   number: 0
+  # Armadillo doesn't support MKL on macOS
+  skip: true  # [osx and (blas_impl != 'openblas')]
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
-    - make
+    - make  # [not win]
     - ninja  # [win]
+  host:
+    # ensmallen is a C++ header only library. We don't technically need these in hosts, but they
+    # allow ot inject run_exports.
+    - intel-openmp  # [win]
     - llvm-openmp  # [osx]
     - libgomp      # [linux]
-  host:
     - armadillo >=9.800.0
-    - libblas
+    - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
+    - mkl-devel {{ mkl }}  # [blas_impl == 'mkl']
   run:
+    # Pins through run_exports of packages in host.
+    - intel-openmp  # [win]
+    - llvm-openmp  # [osx]
+    - libgomp      # [linux]
     - armadillo
+    - openblas-devel # [blas_impl == 'openblas' and not win]
+    - mkl-devel  # [blas_impl == 'mkl']
 
 test:
   commands:
@@ -33,8 +45,10 @@ test:
     - test -d $PREFIX/include/ensmallen_bits                   # [unix]
     - if not exist %LIBRARY_INC%\\ensmallen.hpp exit 1         # [win]
     - if not exist %LIBRARY_INC%\\ensmallen_bits exit 1        # [win]
+
+
 about:
-  home: http://ensmallen.org/
+  home: https://www.ensmallen.org
   license: BSD-3-Clause
   license_family: BSD
   license_file: COPYRIGHT.txt
@@ -45,7 +59,7 @@ about:
     cutting-edge optimizers that can be used for virtually any mathematical 
     optimization task. These include full-batch gradient descent techniques, 
     small-batch techniques, gradient-free optimizers, and constrained optimization.
-  doc_url: http://ensmallen.org/docs.html
+  doc_url: https://www.ensmallen.org/docs.html
   dev_url: https://github.com/mlpack/ensmallen
 
 extra:
