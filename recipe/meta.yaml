@@ -26,7 +26,7 @@ requirements:
     - llvm-openmp # [osx and blas_impl != "mkl"]
   host:
     # Added here to get its run_exports in run.
-    - armadillo >=9.800.0
+    - armadillo 12.6.6
   run:
     - intel-openmp {{ mkl }}  # [blas_impl == "mkl"]
     # Pins through run_exports of packages in host.
