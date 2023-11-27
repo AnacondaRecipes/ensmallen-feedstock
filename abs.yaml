@@ -1,6 +1,6 @@
 channels:
-  - https://staging.continuum.io/prefect/fs/superlu-feedstock/pr1/8b4d370
-  - https://staging.continuum.io/prefect/fs/armadillo-feedstock/pr1/5575912
+  - sfe1ed40
+  - https://staging.continuum.io/prefect/fs/armadillo-feedstock/pr1/8d44bc1
 
 upload_channels:
   - sfe1ed40
