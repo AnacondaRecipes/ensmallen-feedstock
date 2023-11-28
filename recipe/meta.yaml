@@ -17,14 +17,21 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
-    - make
+    - make  # [not win]
     - ninja  # [win]
-    - llvm-openmp  # [osx]
-    - libgomp      # [linux]
+    # In build so that their strong run_exports take effect.
+    # ensmallen is a C++ header only library. We don't technically need these in build, but they
+    # allow to inject run_exports.
+    - libgomp # [linux and blas_impl != "mkl"]
+    - llvm-openmp # [osx and blas_impl != "mkl"]
   host:
-    - armadillo >=9.800.0
-    - libblas
+    # Added here to get its run_exports in run.
+    - armadillo 12.6.6
   run:
+    - intel-openmp {{ mkl }}  # [blas_impl == "mkl"]
+    # Pins through run_exports of packages in host.
+    - llvm-openmp  # [osx and blas_impl != "mkl"]
+    - libgomp      # [linux and blas_impl != "mkl"]
     - armadillo
 
 test:
@@ -33,8 +40,10 @@ test:
     - test -d $PREFIX/include/ensmallen_bits                   # [unix]
     - if not exist %LIBRARY_INC%\\ensmallen.hpp exit 1         # [win]
     - if not exist %LIBRARY_INC%\\ensmallen_bits exit 1        # [win]
+
+
 about:
-  home: http://ensmallen.org/
+  home: https://www.ensmallen.org
   license: BSD-3-Clause
   license_family: BSD
   license_file: COPYRIGHT.txt
@@ -45,7 +54,7 @@ about:
     cutting-edge optimizers that can be used for virtually any mathematical 
     optimization task. These include full-batch gradient descent techniques, 
     small-batch techniques, gradient-free optimizers, and constrained optimization.
-  doc_url: http://ensmallen.org/docs.html
+  doc_url: https://www.ensmallen.org/docs.html
   dev_url: https://github.com/mlpack/ensmallen
 
 extra:

@@ -7,6 +7,7 @@ cmake ${CMAKE_ARGS} -G "${CMAKE_GENERATOR}" \
       ..
 
 make -j${CPU_COUNT}
+make ensmallen_tests -j${CPU_COUNT}
 make install
 
-
+./ensmallen_tests --durations yes
