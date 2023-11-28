@@ -1,6 +1,2 @@
-channels:
-  - sfe1ed40
-  - https://staging.continuum.io/prefect/fs/armadillo-feedstock/pr1/8d44bc1
-
 upload_channels:
   - sfe1ed40
